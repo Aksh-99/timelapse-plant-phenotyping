@@ -1,7 +1,6 @@
 import os
 import cv2
 
-
 video_path = "data/raw_videos/day_01.mp4"
 output_folder = "data/frames/day_01"
 os.makedirs(output_folder, exist_ok=True)
@@ -12,8 +11,9 @@ while True:
     if not ret:
         break
     #print("Reading frame...", frame)
-    filename = f"{output_folder}/frame_{frame_count}.jpg"
-    cv2.imwrite(filename, frame)
+    if frame_count % 10 == 0:
+        filename = f"{output_folder}/frame_{frame_count}.jpg"
+        cv2.imwrite(filename, frame)
     frame_count += 1
     cv2.imshow('video',frame)
     if cv2.waitKey(25) == 27:
