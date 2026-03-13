@@ -33,7 +33,7 @@ for video_file in video_files:
         if not ret:
             break
 
-        if frame_count % 10 == 0:
+        if frame_count % 50 == 0:
             filename = os.path.join(output_folder, f"frame_{frame_count}.jpg")
             cv2.imwrite(filename, frame)
             saved_count += 1

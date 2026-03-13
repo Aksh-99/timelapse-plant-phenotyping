@@ -1,55 +1,44 @@
-import os
 import pandas as pd
+import torch
+from torch.utils.data import Dataset
+from PIL import Image
+from torchvision import transforms
 
-FRAMES_ROOT = "data/frames"
-OUTPUT_CSV = "data/labels/dataset.csv"
-IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png")
+class PlantDataset(Dataset):
 
+    def __init__(self, csv_file, transform=None):
+        """
+        csv_file: path to dataset csv
+        transform: torchvision transforms
+        """
+        self.data = pd.read_csv(csv_file)
+        self.transform = transform
 
-def get_day_number(folder_name):
-    # "day_01" -> 1
-    return int(folder_name.replace("day_", ""))
+        if self.transform is None:
+            self.transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                transforms.ToTensor()
+            ])
 
+    def __len__(self):
+        return len(self.data)
 
-def main():
-    rows = []
+    def __getitem__(self, idx):
 
-    for day_folder in sorted(os.listdir(FRAMES_ROOT)):
-        day_folder_path = os.path.join(FRAMES_ROOT, day_folder)
+        row = self.data.iloc[idx]
 
-        if not os.path.isdir(day_folder_path):
-            continue
+        image_path = row["image_path"]
+        image = Image.open(image_path).convert("RGB")
 
-        if not day_folder.startswith("day_"):
-            continue
+        image = self.transform(image)
 
-        day_number = get_day_number(day_folder)
+        day = row["day"]
 
-        image_files = sorted(
-            [
-                f for f in os.listdir(day_folder_path)
-                if f.lower().endswith(IMAGE_EXTENSIONS)
-            ]
-        )
+        height = row["height_cm"]
+        stage = row["stage"]
 
-        sampled_images = image_files[::10]
+        # convert to tensor (optional if empty)
+        height = torch.tensor(height) if not pd.isna(height) else torch.tensor(-1)
+        stage = torch.tensor(stage) if not pd.isna(stage) else torch.tensor(-1)
 
-        for image_file in sampled_images:
-            image_path = os.path.join(day_folder_path, image_file)
-
-            rows.append({
-                "image_path": image_path,
-                "day": day_number,
-                "height_cm": "",
-                "stage": ""
-            })
-
-    df = pd.DataFrame(rows)
-    os.makedirs("data/labels", exist_ok=True)
-    df.to_csv(OUTPUT_CSV, index=False)
-
-    print(f"Created {OUTPUT_CSV} with {len(df)} rows.")
-
-
-if __name__ == "__main__":
-    main()
+        return image, day, height, stage
