@@ -1,8 +1,5 @@
 image_path,day,height_cm,stage
 data/frames/day_01/frame_0.jpg,1,,
-data/frames/day_01/frame_180.jpg,1,,
-data/frames/day_01/frame_270.jpg,1,,
-data/frames/day_01/frame_360.jpg,1,,
-data/frames/day_01/frame_450.jpg,1,,
-data/frames/day_01/frame_540.jpg,1,,
-data/frames/day_01/frame_630.jpg,1,,
+data/frames/day_01/frame_500.jpg,1,,
+data/frames/day_02/frame_0.jpg,2,,
+data/frames/day_02/frame_500.jpg,2,,
