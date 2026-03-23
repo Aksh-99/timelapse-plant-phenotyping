@@ -14,7 +14,7 @@ VAL_LABELS = "data/detection/labels/val"
 
 MODEL_SAVE_PATH = "models/seed_detector_fasterrcnn.pth"
 
-NUM_CLASSES = 3
+NUM_CLASSES = 6  # background + seed + germination
 BATCH_SIZE = 1
 NUM_EPOCHS = 10
 LEARNING_RATE = 1e-5
