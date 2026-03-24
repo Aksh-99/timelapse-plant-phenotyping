@@ -9,7 +9,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
  
 # ─── CONFIG ───────────────────────────────────────────────────────────────────
 MODEL_PATH    = "models/seed_detector_fasterrcnn.pth"
-INPUT_FOLDER  = "data/raw_videos"
+INPUT_VIDEO = "data/raw_videos/compile.mp4"
 OUTPUT_FOLDER = "output/detection_videos"
  
 NUM_CLASSES       = 6      # background + seed + germination
@@ -256,8 +256,11 @@ def process_video(model, device, input_path, output_path):
             sprout_n = sum(1 for d in current_detections if d["label"] == 3)
             seedling_n = sum(1 for d in current_detections if d["label"] == 4)
             vegetative_n = sum(1 for d in current_detections if d["label"] == 5)
-            print(f"  {os.path.basename(input_path)}: "
-                  f"frame {frame_count:>5} | seeds: {seed_n} | germinations: {germ_n}")
+            print( 
+                f"  {os.path.basename(input_path)}: "f"frame {frame_count:>5} | "
+                f"seeds: {seed_n} | germinations: {germ_n} | "
+                f"sprouts: {sprout_n} | seedlings: {seedling_n} | vegetative: {vegetative_n}"
+                )
  
     cap.release()
     out.release()
@@ -279,38 +282,26 @@ def main():
         print(f"[ERROR] Model not found: {MODEL_PATH}")
         print("Run train_seed_detector.py first.")
         return
- 
-    if not os.path.exists(INPUT_FOLDER):
-        print(f"[ERROR] Input folder not found: {INPUT_FOLDER}")
+
+    if not os.path.exists(INPUT_VIDEO):
+        print(f"[ERROR] Video not found: {INPUT_VIDEO}")
         return
- 
+
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
- 
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
- 
+
     # Load with key verification
     model = verify_model_load(MODEL_PATH, device)
     model.to(device)
     model.eval()
     print("Model ready.\n")
- 
-    videos = sorted(
-        f for f in os.listdir(INPUT_FOLDER) if f.lower().endswith(".mp4")
-    )
- 
-    if not videos:
-        print(f"No .mp4 files found in {INPUT_FOLDER}")
-        return
- 
-    print(f"Found {len(videos)} video(s): {videos}\n")
- 
-    for video_file in videos:
-        input_path  = os.path.join(INPUT_FOLDER, video_file)
-        output_name = video_file.replace(".mp4", "_seed_detected.mp4")
-        output_path = os.path.join(OUTPUT_FOLDER, output_name)
-        print(f"Processing: {video_file}")
-        process_video(model, device, input_path, output_path)
+
+    output_path = os.path.join(OUTPUT_FOLDER, "compile_seed_detected.mp4")
+
+    print(f"Processing: {os.path.basename(INPUT_VIDEO)}")
+    process_video(model, device, INPUT_VIDEO, output_path)
  
  
 if __name__ == "__main__":
