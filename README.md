@@ -14,7 +14,8 @@ An end-to-end computer vision and data pipeline for automated plant growth stage
 
 **Germination Detection** — Faster R-CNN bounding box detection on original timelapse frame:
 
-![Germination Detection](assets/germination_detection.png)
+<img width="968" height="940" alt="image" src="https://github.com/user-attachments/assets/2b1ae8a4-1a7e-45f7-8836-b3f5434f46c7" />
+
 
 ---
 
