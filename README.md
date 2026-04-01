@@ -8,7 +8,6 @@ An end-to-end computer vision and data pipeline for automated plant growth stage
 
 **Tamagotchi Seed Dashboard** — React frontend visualizing 12 days of plant growth data with pixel-art UI, day-by-day growth log, temperature tracking, and mood system:
 
-![Tamagotchi Seed Dashboard](assets/dashboard.png)
 <img width="2704" height="2950" alt="image" src="https://github.com/user-attachments/assets/4685ffc4-ceda-4d1b-bdfe-020d20022236" />
 
 
